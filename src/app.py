@@ -9,6 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User
+import json
 #from models import Person
 
 app = Flask(__name__)
@@ -36,14 +37,47 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+
+# Acá empezamos a trabajar, todo el resto sobre esta línea no se toca
+
 @app.route('/user', methods=['GET'])
-def handle_hello():
+def handle_allusers():
+    allusers = User.query.all()
+    results = list(map(lambda item: item.serialize(),allusers))
+    return jsonify(results), 200
 
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
 
-    return jsonify(response_body), 200
+@app.route('/user/<int:user_id>', methods=['GET'])
+def handle_one_user(user_id):
+    oneuser = User.query.filter_by(id=user_id).first()
+    if oneuser is None:
+        return jsonify({"msg":"usuario no existente"}), 404
+    else:
+        return jsonify(oneuser.serialize()), 200
+
+@app.route('/user', methods=['POST'])
+def add_user():
+    request_body = request.data
+    decoded_object = json.loads(request_body)
+    get_email = User.query.filter_by(email=decoded_object["email"]).first()
+    if get_email is None:
+        new_user = User(user_name=decoded_object["user_name"], email=decoded_object["email"], password=decoded_object["password"])
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"msg":"usuario creado exitosamente"}), 200
+    else:
+        return jsonify({"msg":"el email ya existe"}), 400
+
+
+# @app.route('/user/<int:user_id>', methods=['DELETE'])
+# def delete_user(user_id):
+#     del user[user_id]
+#     json_text = jsonify(user)
+#     return 
+
+
+
+# Acá se termina de trabajar, todo lo de abajo no se toca
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
