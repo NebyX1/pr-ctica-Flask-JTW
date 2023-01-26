@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Characters, Planets, Vehicles, Favourites
 import json
 #from models import Person
 
@@ -68,14 +68,57 @@ def add_user():
     else:
         return jsonify({"msg":"el email ya existe"}), 400
 
+#Acá van todas las funciones que convocan a todos los elementos dentro de cada categoría
 
-# @app.route('/user/<int:user_id>', methods=['DELETE'])
-# def delete_user(user_id):
-#     del user[user_id]
-#     json_text = jsonify(user)
-#     return 
+@app.route('/characters', methods=['GET'])
+def handle_characters():
+    all_characters = Characters.query.all()
+    results = list(map(lambda item: item.serialize(),all_characters))
+    return jsonify(results), 200
 
+@app.route('/planets', methods=['GET'])
+def handle_planet():
+    all_planets = Planets.query.all()
+    results = list(map(lambda item: item.serialize(),all_planets))
+    return jsonify(results), 200
 
+@app.route('/vehicles', methods=['GET'])
+def handle_vehicle():
+    all_vehicles = Vehicles.query.all()
+    results = list(map(lambda item: item.serialize(),all_vehicles))
+    return jsonify(results), 200
+
+@app.route('/favourites', methods=['GET'])
+def handle_favourites():
+    all_favourites = Favourites.query.all()
+    results = list(map(lambda item: item.serialize(),all_favourites))
+    return jsonify(results), 200
+
+#Acá van todas las funciones que devuelven los elementos individuales
+
+@app.route('/characters/<int:character_id>', methods=['GET'])
+def handle_one_character(character_id):
+    one_character = Characters.query.filter_by(id=character_id).first()
+    if one_character is None:
+        return jsonify({"msg":"planeta no existente"}), 404
+    else:
+        return jsonify(one_character.serialize()), 200
+
+@app.route('/planets/<int:planet_id>', methods=['GET'])
+def handle_one_planet(planet_id):
+    one_planet = Planets.query.filter_by(id=planet_id).first()
+    if one_planet is None:
+        return jsonify({"msg":"planeta no existente"}), 404
+    else:
+        return jsonify(one_planet.serialize()), 200
+
+@app.route('/vehicles/<int:vehicle_id>', methods=['GET'])
+def handle_one_vehicle(vehicle_id):
+    one_vehicle = Vehicles.query.filter_by(id=vehicle_id).first()
+    if one_vehicle is None:
+        return jsonify({"msg":"vehículo no existente"}), 404
+    else:
+        return jsonify(one_vehicle.serialize()), 200
 
 # Acá se termina de trabajar, todo lo de abajo no se toca
 
