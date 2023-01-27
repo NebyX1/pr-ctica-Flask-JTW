@@ -214,10 +214,14 @@ def borrar_Character_Fav(user_ID, character_ID):
 		return jsonify(response_body), 404
 	#Aquí le indicamos que debe borrar al personaje seleccionado
 	borrar_personaje = Favourites.query.filter_by(user_id=user_ID).filter_by(character_id=character_ID).first()
-	db.session.delete(borrar_personaje)
-	db.session.commit()
-	response_body = {"msg": "El personaje seleccionado fue borrado con exito"}
-	return jsonify(response_body), 200
+	if borrar_personaje is None:
+		response_body = {"msg": "El personaje ingresado no existe dentro de favoritos"}
+		return jsonify(response_body), 404
+	else:
+		db.session.delete(borrar_personaje)
+		db.session.commit()
+		response_body = {"msg": "El personaje seleccionado fue borrado con exito"}
+		return jsonify(response_body), 200
 
 
 @app.route('/favourites/planets/<int:user_ID>/<int:planet_ID>', methods=['DELETE'])
@@ -234,10 +238,14 @@ def borrar_Planet_Fav(user_ID, planet_ID):
 		return jsonify(response_body), 404
 	#Aquí le indicamos que debe borrar al planeta seleccionado
 	borrar_planeta = Favourites.query.filter_by(user_id=user_ID).filter_by(planet_id=planet_ID).first()
-	db.session.delete(borrar_planeta)
-	db.session.commit()
-	response_body = {"msg": "El planeta seleccionado fue borrado con exito"}
-	return jsonify(response_body), 200
+	if borrar_planeta is None:
+		response_body = {"msg": "El planeta ingresado no existe dentro de favoritos"}
+		return jsonify(response_body), 404
+	else:
+		db.session.delete(borrar_planeta)
+		db.session.commit()
+		response_body = {"msg": "El planeta seleccionado fue borrado con exito"}
+		return jsonify(response_body), 200
 
 
 @app.route('/favourites/vehicles/<int:user_ID>/<int:vehicle_ID>', methods=['DELETE'])
@@ -252,12 +260,17 @@ def borrar_Vehicle_Fav(user_ID, vehicle_ID):
 	if vehiculo is None:
 		response_body = {"msg": "El vehículo ingresado no existe dentro de favoritos"}
 		return jsonify(response_body), 404
+
 	#Aquí le indicamos que debe borrar el vehículo seleccionado
 	borrar_vehiculo = Favourites.query.filter_by(user_id=user_ID).filter_by(vehicle_id=vehicle_ID).first()
-	db.session.delete(borrar_vehiculo)
-	db.session.commit()
-	response_body = {"msg": "El planeta seleccionado fue borrado con exito"}
-	return jsonify(response_body), 200
+	if borrar_vehiculo is None:
+		response_body = {"msg": "El vehículo ingresado no existe dentro de favoritos"}
+		return jsonify(response_body), 404
+	else:
+		db.session.delete(borrar_vehiculo)
+		db.session.commit()
+		response_body = {"msg": "El planeta seleccionado fue borrado con exito"}
+		return jsonify(response_body), 200
 
 # Acá se termina de trabajar, todo lo de abajo no se toca
 
