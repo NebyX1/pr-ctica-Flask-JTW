@@ -133,11 +133,16 @@ def add_NewFavCharacter(user_ID, character_ID):
 			response_body = {"msg":"El personaje no existe"}
 			return jsonify(response_body), 404
 		else:
-			favorito = Favourites(character_id=character_ID,user_id=user_ID)
-			db.session.add(favorito)
-			db.session.commit()
-			response_body = {"msg":"Se ha agregado el personaje a favoritos"}
-			return jsonify(response_body), 200
+			user = User.query.filter_by(id=user_ID).first()
+			if user is None:
+				response_body = {"msg":"El usuario no existe"}
+				return jsonify(response_body), 404
+			else:
+				favorito = Favourites(character_id=character_ID,user_id=user_ID)
+				db.session.add(favorito)
+				db.session.commit()
+				response_body = {"msg":"Se ha agregado el personaje a favoritos"}
+				return jsonify(response_body), 200
 	else:
 		response_body = {"msg":"El personaje ya está agregado"}
 		return jsonify(response_body), 404
@@ -153,11 +158,16 @@ def add_NewFavPlanets(user_ID, planet_ID):
 			response_body = {"msg":"El planeta no existe"}
 			return jsonify(response_body), 404
 		else:
-			favorito = Favourites(planet_id=planet_ID,user_id=user_ID)
-			db.session.add(favorito)
-			db.session.commit()
-			response_body = {"msg":"Se ha agregado el planeta a favoritos"}
-			return jsonify(response_body), 200
+			user = User.query.filter_by(id=user_ID).first()
+			if user is None:
+				response_body = {"msg":"El usuario no existe"}
+				return jsonify(response_body), 404
+			else:
+				favorito = Favourites(planet_id=planet_ID,user_id=user_ID)
+				db.session.add(favorito)
+				db.session.commit()
+				response_body = {"msg":"Se ha agregado el planeta a favoritos"}
+				return jsonify(response_body), 200
 	else:
 		response_body = {"msg":"El planeta ya está agregado"}
 		return jsonify(response_body), 404
@@ -173,11 +183,16 @@ def add_NewFavVehicle(user_ID, vehicle_ID):
 			response_body = {"msg":"El vehículo no existe"}
 			return jsonify(response_body), 404
 		else:
-			favorito = Favourites(vehicle_id=vehicle_ID, user_id=user_ID)
-			db.session.add(favorito)
-			db.session.commit()
-			response_body = {"msg":"Se ha agregado el vehículo a favoritos"}
-			return jsonify(response_body), 200
+			user = User.query.filter_by(id=user_ID).first()
+			if user is None:
+				response_body = {"msg":"El usuario no existe"}
+				return jsonify(response_body), 404
+			else:
+				favorito = Favourites(vehicle_id=vehicle_ID, user_id=user_ID)
+				db.session.add(favorito)
+				db.session.commit()
+				response_body = {"msg":"Se ha agregado el vehículo a favoritos"}
+				return jsonify(response_body), 200
 	else:
 		response_body = {"msg":"El vehículo ya está agregado"}
 		return jsonify(response_body), 404
