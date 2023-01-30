@@ -110,7 +110,6 @@ def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     get_user = User.query.filter_by(email=current_user).first()
-    print(get_user.serialize())
     return jsonify(logged_in_as=current_user), 200
 
 
